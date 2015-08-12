@@ -1,4 +1,4 @@
-Whistle a program for playing Gomoku humans or against the computer on board the dimensions 19 * 19. Made in Turbo Assembler for 8086.  Application: No installation is necessary. The program is run piskasm.com file.
+Whistle a program for playing Gomoku Piskvorky humans or against the computer on board the dimensions 19 * 19. Made in Turbo Assembler for 8086.  Application: No installation is necessary. The program is run piskasm.com file.
 
 ![Piskasm](Piskasm.png "Piskasm")
 
