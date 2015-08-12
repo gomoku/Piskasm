@@ -1,0 +1,18 @@
+PiskAsm - Uivatelská dokumentace
+PiskAsm je program pro hru piškvorek neboli gomoku èlovìka proti poèítaèi na desce o rozmìrech 19 * 19.
+
+Pouití:
+ádná instalace není nutná. Program se spouští souborem piskasm.com. Klávesami 1, 2 nebo 3 zvolte, zda má zaèínat èlovìk nebo poèítaè nebo zda chcete ukonèit hru. Program umí pouze hru jednoho hráèe proti poèítaèi (na hru dvou hráèù poèítaè nepotøebujete) Hra samotná se ovládá myší, staèí kliknout na políèko, na které chcete umístit kámen. Poslední tah poèítaèe je zvıraznìn jasnì èervenou barvou. Z programu nelze vyskoèit bìhem hry, musíte nejdøív vyhrát nebo se nechat porazit. K dispozici je jen jedna úroveò obtínosti, pøi které jistì s trochou trpìlivosti dokáete poèítaè porazit.
+
+Pravidla piškvorek
+Hráèi støídavì umísují kameny na hrací desku. Kameny nelze brát zpìt, pøesouvat ani zabírat. Hráè, kterému se jako prvnímu podaøí poloit 5 nebo více kamenù vedle sebo do øady, je vítìz. V pøípadì, e je celá deska obsazena, ani by kdokoli vyhrál, hra konèí remízou.
+
+Poadavky
+Program je urèen pro operaèní systém MS-DOS. Potøebuje jakékoli PC, 2.5 KB místa na disku, monitor (doporuèuji barevnı), klávesnici a myš.
+
+Program napsal Vojtìch Havránek v záøí 2004 jako zápoètovı program na MFF UK.
+
+vojtech.havranek@matfyz.cz
+www.gomocup.wz.cz
+
+Další informace naleznete v programátorské dokumetaci (progr.txt).

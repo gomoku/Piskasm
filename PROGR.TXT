@@ -1,0 +1,43 @@
+PiskAsm - Prograátorská dokumentace
+PiskAsm je program pro hru piškvorek neboli gomoku èlovìka proti poèítaèi na desce o rozmìrech 19 * 19.
+
+Program je napsán v Borland Turbo Assembleru pro procesor 8086 a pamìovı model TINY, vıslednı spustitelnı soubor je typu .COM. Zdrojovı soubor PISKASM.ASM pøeloíte pøíkazy:
+
+TASM PISKASM.ASM
+TLINK /t PISKASM.OBJ
+
+Program si ukládá informace o stavu hry pøedevším v datovıch strukturách Plocha a Info.
+Plocha:
+Dvourozmìrné pole bytù øádu 19 * 19. Na adrese [Plocha + 19*i + j] je uloeno, zda je v i- tém øádku, j-tém sloupci poloen kámen (pøièem sloupce i øádky jsou èíslovány od 0). Hodnota 0 znaèí prázdné pole, 1 znaèí poèítaèùv kámen (køíek) a 2 je hráèùv kámen (koleèko).
+Info:
+Dvourozmìrné pole dvoubytù øádu 19 * 19, kde si poèítaè ukládá bodové hodnocení monıch tahù. Pokud je pole obsazené, nebo je tah neperspektivní, je tam uloeno 0.
+
+Program se skládá z hlavní èásti a podprogramù. V hlavní èásti se nejprve uloí segment videoram do registru ES, kde je uloen vìtšinu èasu programu. Pak se volá podprogram Intro, kterı vypíše uvítací hlášku. Pote je pomocí pøerušení 51 zapnuta myš. Pokud se myš nepodaøí zapnout, program ihned skonèí. Potom se program dostane k návìští Restart, kde se volá podprogram NewGame, kterı vypíše vızvu k nové høe. Pomocí dosového pøerušení se zjistí, kterou monost uivatel zvolil, a pokud neukonèil program, volá se procedura NewBoard, ktera nakresli novou hraci desku a inicializuje Plochu a Info. V pøípadì, e byl zvolen start poèítaèe, vybere se náhodnì (viz dále) místo poblí støedu desky, kam poèítaè rozehraje. Poslední tah poèítaèe se vdy ukládá na adresu LastPC, pro pozdìjší pøekreslení zvıraznìného køíku obyèejnım. Po poloení kadého kamene se vdy volá podprogram Update, kterı aktualizuje Info a testuje, zda nedošlo ke konci hry. Také se dekrementuje èítaè volnıch polí VolnaPole, kterı slouí k detekci remízy. Po eventuelním prvním tahu PC program vstupuje do hlavního cyklu (návìští FirstMove), kde støídavì zpracovává tahy hráèe zadané myší a tahy poèítaèe generované podprogramem PCMove (viz dále). Kdy nìkdo vyhraje nebo dojde k remíze, program vypíše vítìznou hlášku a vrací se na návìští Restart.
+
+Pøi kreslení hráèovy znaèky musí program vypínat kurzor myši, kterı se zrovna nachází na místì, kam se má kreslit. Jinak by se znaèka nakreslila špatnou barvou.
+
+Náhodná èísla
+Program pouívá jednoduchou metodu generování pseudonáhodnıch èísel. Kdy je program v hlavním menu a èeká vstup od hráèe, neustále inkrementuje registr BX. Kdy vstup pøijde, BX je uloeno na adresu Random. Náhodné èíslo se pak získává podprogramem GetRandom, které vrátí obsah pamìti na adrese Random a generuje další náhodné èíslo tak, e k Random pøiète 4567. 4567 je prvoèíslo a tudí jsou všechna náhodná èísla od 0 do FFFFh generována stejnì èasto. 4567 je trochu malé èíslo, take nejvyšší bity náhodného èísla se mìní jen jednou za nìkolik generací, ale to v tomto pøípadì nevadí, protoe pouíváme vdy jen dolní bity náhodného èísla.
+
+Umìlá "inteligence"
+Vıbìr tahù poèítaèe probíhá kromì prvního tahu takto:
+V Info je stále uloeno bodování monıch tahù. Podprogram PCMove vybírá tah tak, e od náhodnì zvoleného místa prochází Info nejprve dopøedu a potom dozadu a zvolí první nalezenı tah s maximálním bodovım hodnocením. Takto ale vybere jen tah, kterı má hodnocení vetší ne 0, a proto musí v pøípadì, e mají všechny moné tahy hodnocení 0 (to nastává, kdy je hrací deska skoro plná a u nelze vyhrát) vybrat první monı tah procházením Plochy.
+
+Tahy jsou bodovány takto:
+Na zaèátku hry je info inicializováno samımi nulami. Po kadém tahu je v podprogramu Update aktualizováno hodnocení obsazeného pole na 0 a volná sousední pole (ve všech osmi smìrech a do vzdálenosti ètyø políèek) jsou pøebodována podprogramem CountScore.
+Countscore poèítá body za tah podle "útvarù" na desce, které vzniknou poloením kamene v kadém smìru zvláš a sèítá je. Bodovani kadého útvaru je uloeno v datové struktuøe Bodovani, ve které se indexuje binárnì zakódovanou maskou daného útvaru. Útvary mají délku 5, 6 nebo 7 políèek. Pro kadı smìr se pak do souètu bodù za tah pøidají body nejlépe bodovaného útvaru (ze všech pìti-sedmipolíèkovıch útoènıch a obrannıch), kterı v daném smìru danım tahem vznikne.
+Je to tzv. statická ohodnocovací funkce, tj. nesnaí se nijak prohledávat moné soupeøovy protitahy dopøedu, nepouívá se ádnı minimax.
+
+Známé nedostatky:
+Program pøi selhání detekce myši nevypisuje ádnou chybovou hlášku a prostì skonèí.
+Umìlá inteligence nepoèítá s tzv. støíškami. Napøíklad kdy hráè mùe postavit smrtící støíšku "4+3", poèítaè klidnì spáchá sebevradu kdy zaútoèí sestavením trojice.
+Hru nelze nijak pøerušit ne nìkdo vyhraje nebo dojde k remíze.
+
+
+
+Program napsal Vojtìch Havránek v záøí 2004 jako zápoètovı program na MFF UK.
+
+vojtech.havranek@matfyz.cz
+turnaj piškvorek: www.gomocup.wz.cz
+
+Další informace naleznete v uivatelské dokumetaci (uzivatel.txt).
